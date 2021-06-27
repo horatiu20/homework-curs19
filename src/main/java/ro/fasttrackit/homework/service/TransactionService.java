@@ -109,7 +109,7 @@ public class TransactionService {
 						transaction.product() != null ? transaction.product() : oldTransaction.product(),
 						transaction.transactionType() != null ? transaction.transactionType() : oldTransaction.transactionType(),
 						transaction.amount() != 0 ? transaction.amount() : oldTransaction.amount()));
-		patchedTransaction.ifPresent(newCountry -> putTransaction(transactionId, newCountry));
+		patchedTransaction.ifPresent(newTransaction -> putTransaction(transactionId, newTransaction));
 		return patchedTransaction;
 	}
 
