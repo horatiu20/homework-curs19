@@ -6,6 +6,7 @@ import ro.fasttrackit.homework.model.Type;
 import ro.fasttrackit.homework.service.TransactionService;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("transactions")
@@ -70,5 +71,15 @@ public class TransactionController {
 	@DeleteMapping("{transactionId}")
 	Transaction deleteTransaction(@PathVariable int transactionId) {
 		return transactionService.deleteTransaction(transactionId).orElse(null);
+	}
+
+	@GetMapping("type/amount")
+	Map<Type, List<Transaction>> mapTypeToAmount(){
+		return transactionService.mapTypeToAmount();
+	}
+
+	@GetMapping("product/amount")
+	Map<String, List<Transaction>> mapProductToAmount(){
+		return transactionService.mapProductToAmount();
 	}
 }
