@@ -8,7 +8,7 @@ import ro.fasttrackit.homework.service.TransactionService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/transactions")
+@RequestMapping("transactions")
 public class TransactionController {
 	private final TransactionService transactionService;
 
@@ -54,7 +54,7 @@ public class TransactionController {
 
 	@PostMapping
 	Transaction createTransaction(@RequestBody Transaction transaction) {
-		return transactionService.addTransaction(transaction);
+		return transactionService.postTransaction(transaction);
 	}
 
 	@PutMapping("{transactionId}")

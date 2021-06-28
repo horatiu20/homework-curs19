@@ -90,18 +90,8 @@ public class TransactionService {
 		return newTransaction;
 	}
 
-	public Transaction addTransaction(int transactionId, Transaction transaction) {
-		Transaction newTransaction = new Transaction(
-				transactionId,
-				transaction.product(),
-				transaction.transactionType(),
-				transaction.amount());
-		this.transactions.add(transactionId - 1, newTransaction);
-		return newTransaction;
-	}
-
-	public Transaction addTransaction(Transaction transaction) {
-		return addTransaction(fetchMaxId() + 1, transaction);
+	public Transaction postTransaction(Transaction transaction) {
+		return postTransaction(fetchMaxId() + 1, transaction);
 	}
 
 	private int fetchMaxId() {
