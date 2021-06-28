@@ -9,15 +9,30 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class TransactionService {
 	private final List<Transaction> transactions = new ArrayList<>();
 
-	public List<Transaction> getAllProducts(String product) {
+	public TransactionService() {
+		transactions.addAll(List.of(
+				new Transaction(1, "laptop", Type.BUY, 1000),
+				new Transaction(2, "headphones", Type.BUY, 100),
+				new Transaction(3, "player", Type.BUY, 250),
+				new Transaction(4, "tv", Type.SELL, 750),
+				new Transaction(5, "car", Type.SELL, 10000),
+				new Transaction(6, "fridge", Type.SELL, 500)));
+	}
+
+	public List<Transaction> getAllTransactions() {
+		return transactions;
+	}
+
+	public List<String> getAllProducts() {
 		return this.transactions.stream()
-				.filter(transaction -> transaction.product().equalsIgnoreCase(product))
+				.map(Transaction::product)
 				.collect(toList());
 	}
 
@@ -33,13 +48,13 @@ public class TransactionService {
 				.collect(toList());
 	}
 
-	public List<Transaction> getMinAmount(double minAmount) {
+	public List<Transaction> getMinAmount() {
 		return this.transactions.stream()
 				.filter(transaction -> transaction.amount() == fetchMinAmount())
 				.collect(toList());
 	}
 
-	public List<Transaction> getMaxAmount(double maxAmount) {
+	public List<Transaction> getMaxAmount() {
 		return this.transactions.stream()
 				.filter(transaction -> transaction.amount() == fetchMaxAmount())
 				.collect(toList());
@@ -73,7 +88,20 @@ public class TransactionService {
 				transaction.amount());
 		this.transactions.add(newTransaction);
 		return newTransaction;
+	}
 
+	public Transaction addTransaction(int transactionId, Transaction transaction) {
+		Transaction newTransaction = new Transaction(
+				transactionId,
+				transaction.product(),
+				transaction.transactionType(),
+				transaction.amount());
+		this.transactions.add(transactionId - 1, newTransaction);
+		return newTransaction;
+	}
+
+	public Transaction addTransaction(Transaction transaction) {
+		return addTransaction(fetchMaxId() + 1, transaction);
 	}
 
 	private int fetchMaxId() {
@@ -95,10 +123,6 @@ public class TransactionService {
 		transactionOptional
 				.ifPresent(transactions::remove);
 		return transactionOptional;
-	}
-
-	public Transaction postTransaction(Transaction transaction) {
-		return postTransaction(fetchMaxId() + 1, transaction);
 	}
 
 	public Optional<Transaction> patchTransaction(int transactionId, Transaction transaction) {
