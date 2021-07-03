@@ -90,6 +90,10 @@ public class TransactionService {
 		return newTransaction;
 	}
 
+	public Transaction postTransaction(Transaction transaction) {
+		return postTransaction(fetchMaxId() + 1, transaction);
+	}
+
 	private int fetchMaxId() {
 		return this.transactions.stream()
 				.mapToInt(Transaction::id)
