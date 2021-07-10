@@ -52,12 +52,12 @@ public class TransactionController {
 	}
 
 	@GetMapping("reports/type")
-	Map<Type, List<Map<Type, Double>>> sumTypeToAmount() {
-		return transactionService.sumTypeToAmount();
+	Map<Type, List<Double>> mapTypeToAmount() {
+		return transactionService.mapTypeToAmount();
 	}
 
-//	@GetMapping("reports/product")
-//	Map<String, List<Transaction>> mapProductToAmount() {
-//		return transactionService.mapProductToAmount();
-//	}
+	@GetMapping("reports/product")
+	Map<String, List<Double>> mapProductToAmount() {
+		return transactionService.mapProductToAmount();
+	}
 }

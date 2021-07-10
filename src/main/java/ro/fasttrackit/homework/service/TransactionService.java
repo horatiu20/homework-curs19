@@ -84,20 +84,15 @@ public class TransactionService {
 		return patchedTransaction;
 	}
 
-	public Map<Type, List<Map<Type, Double>>> sumTypeToAmount() {
+	public Map<Type, List<Double>> mapTypeToAmount() {
 		return transactions.stream()
 				.collect(groupingBy(Transaction::transactionType,
-						mapping(mapTypeToAmount(), toList())));
+						mapping(Transaction::amount, toList())));
 	}
 
-	private Map<Type, Double> mapTypeToAmount() {
+	public Map<String, List<Double>> mapProductToAmount() {
 		return transactions.stream()
-				.collect(toMap(Transaction::transactionType, Transaction::amount));
+				.collect(groupingBy(Transaction::product,
+						mapping(Transaction::amount, toList())));
 	}
-
-//	public Map<String, List<Map<String, Double>>> mapProductToAmount() {
-//		return transactions.stream()
-//				.collect(groupingBy(Transaction::product,
-//						toList(toMap(Transaction::product, Transaction::amount))));
-//	}
 }
