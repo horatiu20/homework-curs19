@@ -4,13 +4,9 @@ import org.springframework.stereotype.Service;
 import ro.fasttrackit.homework.model.Transaction;
 import ro.fasttrackit.homework.model.Type;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
 
 @Service
 public class TransactionService {
@@ -26,52 +22,13 @@ public class TransactionService {
 				new Transaction(6, "fridge", Type.SELL, 500)));
 	}
 
-	public List<Transaction> getAllTransactions() {
-		return transactions;
-	}
-
-	public List<String> getAllProducts() {
+	public List<Transaction> getAllTransactions(String product, Type transactionType, Double minAmount, Double maxAmount) {
 		return this.transactions.stream()
-				.map(Transaction::product)
+				.filter(transaction -> product == null || transaction.product().equalsIgnoreCase(product))
+				.filter(transaction -> transactionType == null || transaction.transactionType() == transactionType)
+				.filter(transaction -> minAmount == null || transaction.amount() >= minAmount)
+				.filter(transaction -> maxAmount == null || transaction.amount() <= maxAmount)
 				.collect(toList());
-	}
-
-	public List<Transaction> getAllBuyTransactions(Type transactionType) {
-		return this.transactions.stream()
-				.filter(transaction -> transaction.transactionType().equals(Type.BUY))
-				.collect(toList());
-	}
-
-	public List<Transaction> getAllSellTransactions(Type transactionType) {
-		return this.transactions.stream()
-				.filter(transaction -> transaction.transactionType().equals(Type.SELL))
-				.collect(toList());
-	}
-
-	public List<Transaction> getMinAmount() {
-		return this.transactions.stream()
-				.filter(transaction -> transaction.amount() == fetchMinAmount())
-				.collect(toList());
-	}
-
-	public List<Transaction> getMaxAmount() {
-		return this.transactions.stream()
-				.filter(transaction -> transaction.amount() == fetchMaxAmount())
-				.collect(toList());
-	}
-
-	private double fetchMinAmount() {
-		return this.transactions.stream()
-				.mapToDouble(Transaction::amount)
-				.min()
-				.orElse(1);
-	}
-
-	private double fetchMaxAmount() {
-		return this.transactions.stream()
-				.mapToDouble(Transaction::amount)
-				.max()
-				.orElse(1);
 	}
 
 	public Optional<Transaction> getById(int transactionId) {
@@ -127,13 +84,20 @@ public class TransactionService {
 		return patchedTransaction;
 	}
 
-	public Map<Type, List<Transaction>> mapTypeToAmount() {
+	public Map<Type, List<Map<Type, Double>>> sumTypeToAmount() {
 		return transactions.stream()
-				.collect(groupingBy(Transaction::transactionType));
+				.collect(groupingBy(Transaction::transactionType,
+						mapping(mapTypeToAmount(), toList())));
 	}
 
-	public Map<String, List<Transaction>> mapProductToAmount() {
+	private Map<Type, Double> mapTypeToAmount() {
 		return transactions.stream()
-				.collect(groupingBy(Transaction::product));
+				.collect(toMap(Transaction::transactionType, Transaction::amount));
 	}
+
+//	public Map<String, List<Map<String, Double>>> mapProductToAmount() {
+//		return transactions.stream()
+//				.collect(groupingBy(Transaction::product,
+//						toList(toMap(Transaction::product, Transaction::amount))));
+//	}
 }

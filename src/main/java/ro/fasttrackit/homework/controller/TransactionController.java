@@ -18,33 +18,11 @@ public class TransactionController {
 	}
 
 	@GetMapping
-	List<Transaction> getAllTransactions() {
-		return transactionService.getAllTransactions();
-	}
-
-	@GetMapping("product")
-	List<String> getAllProducts() {
-		return transactionService.getAllProducts();
-	}
-
-	@GetMapping("buy")
-	List<Transaction> getAllBuyTransactions(@RequestParam(required = false) Type transactionType) {
-		return transactionService.getAllBuyTransactions(Type.BUY);
-	}
-
-	@GetMapping("sell")
-	List<Transaction> getAllSellTransactions(@RequestParam(required = false) Type transactionType) {
-		return transactionService.getAllSellTransactions(Type.SELL);
-	}
-
-	@GetMapping("minimum")
-	List<Transaction> getMinAmount() {
-		return transactionService.getMinAmount();
-	}
-
-	@GetMapping("maximum")
-	List<Transaction> getMaxAmount() {
-		return transactionService.getMaxAmount();
+	List<Transaction> getAllTransactions(@RequestParam(required = false) String product,
+	                                     @RequestParam(required = false) Type transactionType,
+	                                     @RequestParam(required = false) Double minAmount,
+	                                     @RequestParam(required = false) Double maxAmount) {
+		return transactionService.getAllTransactions(product, transactionType, minAmount, maxAmount);
 	}
 
 	@GetMapping("{transactionId}")
@@ -73,13 +51,13 @@ public class TransactionController {
 		return transactionService.deleteTransaction(transactionId).orElse(null);
 	}
 
-	@GetMapping("type/amount")
-	Map<Type, List<Transaction>> mapTypeToAmount(){
-		return transactionService.mapTypeToAmount();
+	@GetMapping("reports/type")
+	Map<Type, List<Map<Type, Double>>> sumTypeToAmount() {
+		return transactionService.sumTypeToAmount();
 	}
 
-	@GetMapping("product/amount")
-	Map<String, List<Transaction>> mapProductToAmount(){
-		return transactionService.mapProductToAmount();
-	}
+//	@GetMapping("reports/product")
+//	Map<String, List<Transaction>> mapProductToAmount() {
+//		return transactionService.mapProductToAmount();
+//	}
 }
