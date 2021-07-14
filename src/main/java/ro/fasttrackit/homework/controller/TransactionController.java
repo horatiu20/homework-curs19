@@ -38,17 +38,20 @@ public class TransactionController {
 
 	@PutMapping("{transactionId}")
 	Transaction putTransaction(@PathVariable int transactionId, @RequestBody Transaction newTransaction) {
-		return transactionService.putTransaction(transactionId, newTransaction).orElse(null);
+		return transactionService.putTransaction(transactionId, newTransaction)
+				.orElse(null);
 	}
 
 	@PatchMapping("{transactionId}")
 	Transaction patchTransaction(@PathVariable int transactionId, @RequestBody Transaction transaction) {
-		return transactionService.patchTransaction(transactionId, transaction).orElse(null);
+		return transactionService.patchTransaction(transactionId, transaction)
+				.orElse(null);
 	}
 
 	@DeleteMapping("{transactionId}")
 	Transaction deleteTransaction(@PathVariable int transactionId) {
-		return transactionService.deleteTransaction(transactionId).orElse(null);
+		return transactionService.deleteTransaction(transactionId)
+				.orElse(null);
 	}
 
 	@GetMapping("reports/type")

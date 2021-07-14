@@ -21,5 +21,4 @@ public record Transaction(
 		String product,
 		Type transactionType,
 		double amount) {
-
 }
